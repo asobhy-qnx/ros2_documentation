@@ -3,35 +3,6 @@
 Building ROS 2 for QNX 
 =======================
 
-Version 0.2.1 09/30/2020
-Changes: remove google patch, fix typos, add replace rsync with tar to install files on target
-
-Version 0.2.0 09/29/2020
-Changes: fix system requirements
-
-Version 0.1.9 09/29/2020
-Changes: fix cmake sudo installation issue
-
-Version 0.1.8 09/29/2020
-Changes: Add missing numpy - Docker full test run success
-
-Version 0.1.7 09/29/2020
-Changes: Add missing lark-parser
-
-Version 0.1.6 09/29/2020
-Changes: Use pip3.8 to guarantee tools are installed under the correct version of Python
-
-Version 0.1.5 09/28/2020
-Changes: Build Python 3.8.0 from source & better exit code handeling for build-dep.sh script.
-
-Version 0.1.4 09/28/2020
-^^^^^^^^^^^^^^^^^^^^^^^^
-Changes: Add missing tools to build deps
-
-Version 0.1.3 09/25/2020
-^^^^^^^^^^^^^^^^^^^^^^^^
-Changes: automate patching qnxsdp-env.sh script, fix build scripts renamings
-
 .. contents:: Table of Contents
    :depth: 2
    :local:
