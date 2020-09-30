@@ -22,13 +22,13 @@ Version 0.1.6 09/29/2020
 Changes: Use pip3.8 to guarantee tools are installed under the correct version of Python
 
 Version 0.1.5 09/28/2020
-Changes: Build Python 3.8.0 from source & better exit code handeling for build-dep.sh script. 
+Changes: Build Python 3.8.0 from source & better exit code handeling for build-dep.sh script.
 
-Version 0.1.4 09/28/2020 
+Version 0.1.4 09/28/2020
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Changes: Add missing tools to build deps
 
-Version 0.1.3 09/25/2020 
+Version 0.1.3 09/25/2020
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Changes: automate patching qnxsdp-env.sh script, fix build scripts renamings
 
@@ -55,7 +55,7 @@ System requirements
 
 HOST:
 
-- A PC running with Ubuntu 18.04 and QNX SDP7.1
+- A PC running with Ubuntu 18.04 or 20.04 and QNX SDP7.1
 
 TARGET:
 
@@ -81,22 +81,22 @@ However, it should be fine if you're using a different UTF-8 supported locale.
 Install development tools and ROS tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-# Install tools needed for building dependencies
+Install tools needed for building dependencies
 
 .. code-block:: bash
 
     sudo apt install -y \
-    build-essential \
-    bc \
-    subversion \
-    autoconf \
-    libtool-bin \
-    libssl-dev \
-    zlib1g-dev \
-    wget \
-    git \
-    rsync \
-    rename
+     build-essential \
+     bc \
+     subversion \
+     autoconf \
+     libtool-bin \
+     libssl-dev \
+     zlib1g-dev \
+     wget \
+     git \
+     rsync \
+     rename
 
 Install cmake 3.18.0
 
@@ -120,19 +120,19 @@ Install Python 3.8.0 dependencies
 .. code-block:: bash
 
     sudo apt install -y \
-        libsqlite3-dev \
-        sqlite3 \
-        bzip2 \
-        libbz2-dev \
-        zlib1g-dev \
-        openssl \
-        libgdbm-dev \
-        libgdbm-compat-dev \
-        liblzma-dev \
-        libreadline-dev \
-        libncursesw5-dev \
-        libffi-dev \
-        uuid-dev
+     libsqlite3-dev \
+     sqlite3 \
+     bzip2 \
+     libbz2-dev \
+     zlib1g-dev \
+     openssl \
+     libgdbm-dev \
+     libgdbm-compat-dev \
+     liblzma-dev \
+     libreadline-dev \
+     libncursesw5-dev \
+     libffi-dev \
+     uuid-dev
 
 Install Python 3.8.0
 
@@ -213,13 +213,13 @@ Build and Install dependencies
 Important QNX keywords and a brief intro
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**QNX_HOST:** 
+**QNX_HOST:**
 Environment variable which provides the path to your ~/qnx_installation_path/host/operating_system_name/architecture/, e.g: ~/qnx710/host/linux/x86_64, and this is where your toolchain is.
 
-**QNX_TARGET:** 
+**QNX_TARGET:**
 Environment variable which provides the path to your ~/qnx_installation_path/target/qnx7, e.g: ~/qnx710/target/qnx7, and this is where the system root files for the three supported architectures exist
 
-**QNX_STAGE:** 
+**QNX_STAGE:**
 Environment variable which can be set by the user to provid the path to your cross compiled dependencies.
 
 The environment variables above need to be set by a script before you start building for QNX. The script exists inside your SDP7.1 directory, e.g: qnx710/qnxsdp-env.sh.
