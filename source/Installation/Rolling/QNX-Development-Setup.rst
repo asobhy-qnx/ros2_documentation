@@ -2,9 +2,31 @@
 
 Building ROS 2 for QNX 
 =======================
+
+Version 0.2.1 09/30/2020
+Changes: remove google patch, fix typos, add replace rsync with tar to install files on target
+
+Version 0.2.0 09/29/2020
+Changes: fix system requirements
+
+Version 0.1.9 09/29/2020
+Changes: fix cmake sudo installation issue
+
+Version 0.1.8 09/29/2020
+Changes: Add missing numpy - Docker full test run success
+
+Version 0.1.7 09/29/2020
+Changes: Add missing lark-parser
+
+Version 0.1.6 09/29/2020
+Changes: Use pip3.8 to guarantee tools are installed under the correct version of Python
+
+Version 0.1.5 09/28/2020
+Changes: Build Python 3.8.0 from source & better exit code handeling for build-dep.sh script. 
+
 Version 0.1.4 09/28/2020 
 ^^^^^^^^^^^^^^^^^^^^^^^^
-Changes: add missing tools to build deps
+Changes: Add missing tools to build deps
 
 Version 0.1.3 09/25/2020 
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -33,16 +55,11 @@ System requirements
 
 HOST:
 
-- A PC running Linux with QNX SDP7.1 and ROS 2 dependencies installed. (Note: Instructions tested on Ubuntu 18.04)
-
-- Python3.8.
-
-- cmake 3.18 (Note: cmake 3.10 has issues with cross compiling some packages, other versions above 3.10 might work, but cmake 3.18 is tested)
-
+- A PC running with Ubuntu 18.04 and QNX SDP7.1
 
 TARGET:
 
-- A supported architecture running QNX SDP7.1
+- A QNX supported architecture running QNX SDP7.1
 
 
 System setup
@@ -61,11 +78,6 @@ However, it should be fine if you're using a different UTF-8 supported locale.
    sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
    export LANG=en_US.UTF-8
 
-Add the ROS 2 apt repository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. include:: ../_Apt-Repositories.rst
-
 Install development tools and ROS tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -74,23 +86,28 @@ Install development tools and ROS tools
 .. code-block:: bash
 
     sudo apt install -y \
-        bc \
-        subversion \
-        autoconf \
-        libtool-bin \
-        libssl-dev \
-        rename \
-        rsync 
+    build-essential \
+    bc \
+    subversion \
+    autoconf \
+    libtool-bin \
+    libssl-dev \
+    zlib1g-dev \
+    wget \
+    git \
+    rsync \
+    rename
 
 Install cmake 3.18.0
 
 .. code-block:: bash
-
-    mkdir /opt/cmake && \
-    cd /opt && \
-    wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh && \
-    yes | sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt/cmake && \
-    ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
+    
+    sudo bash
+    cd /opt
+    wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
+    sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt
+    ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
+    exit
     
 Check version.
     
@@ -98,87 +115,82 @@ Check version.
 
     cmake --version
 
-
-Install Python 3.8
-
-.. code-block:: bash
-
-    sudo apt update
-    sudo apt install software-properties-common
-    sudo add-apt-repository ppa:deadsnakes/ppa
-    sudo apt install python3.8
-    sudo ln -s /usr/bin/python3.8 /usr/local/bin/python
-
-Check version.
-    
-.. code-block:: bash
-
-    python --version
-
-
-Install pip
-
-.. code-block:: bash
-
-    cd ~/Downloads
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    sudo python3.8 get-pip.py
-    
-
-Install additional tools needed for building dependencies
+Install Python 3.8.0 dependencies
 
 .. code-block:: bash
 
     sudo apt install -y \
-    subversion \
-    autoconf \
-    libtool-bin
+        libsqlite3-dev \
+        sqlite3 \
+        bzip2 \
+        libbz2-dev \
+        zlib1g-dev \
+        openssl \
+        libgdbm-dev \
+        libgdbm-compat-dev \
+        liblzma-dev \
+        libreadline-dev \
+        libncursesw5-dev \
+        libffi-dev \
+        uuid-dev
 
-
-Install standard ROS 2 development tools
+Install Python 3.8.0
 
 .. code-block:: bash
 
-   sudo apt update && sudo apt install -y \
-     build-essential \
-     git \
-     python3-colcon-common-extensions \
-     python3-flake8 \
-     python3-pytest-cov \
-     python3-rosdep \
-     python3-setuptools \
-     python3-vcstool \
-     wget
+    cd /tmp
+    wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz
+    tar -xf Python-3.8.0.tgz
+    cd Python-3.8.0
+    sudo ./configure --enable-optimizations
+    sudo make -j$(nproc)
+    sudo make altinstall
+    sudo ln -s /usr/local/bin/python3.8 /usr/local/bin/python
+    sudo ln -s /usr/local/bin/python3.8 /usr/local/bin/python3
+
+Open a new terminal and verify Python version is correct.
+    
+.. code-block:: bash
+
+    python --version
+    python3 --version
+
+
+Install standard ROS 2 development tools. Cython is needed for building numpy which is one of the dependencies needed to be built from source.
+
+.. code-block:: bash
+
+   sudo pip3.8 install \
+    colcon-common-extensions \
+    flake8 \
+    pytest-cov \
+    rosdep \
+    setuptools \
+    vcstool \
+    lark-parser \
+    numpy \
+    Cython \
+    importlib-metadata \
+    importlib-resources
      
-     
-Install some pip packages needed for testing
+Install some packages needed for testing
 
 .. code-block:: bash
 
-   python3 -m pip install -U \
-     argcomplete \
-     flake8-blind-except \
-     flake8-builtins \
-     flake8-class-newline \
-     flake8-comprehensions \
-     flake8-deprecated \
-     flake8-docstrings \
-     flake8-import-order \
-     flake8-quotes \
-     pytest-repeat \
-     pytest-rerunfailures \
-     pytest \
-     setuptools \
-     importlib-metadata \
-     importlib-resources
-
-
-Cython is needed for building numpy which is one of the dependencies needed to be built from source.
-
-.. code-block:: bash
-
-    sudo pip3.8 install Cython
-
+   sudo pip3.8 install \
+    argcomplete \
+    flake8-blind-except \
+    flake8-builtins \
+    flake8-class-newline \
+    flake8-comprehensions \
+    flake8-deprecated \
+    flake8-docstrings \
+    flake8-import-order \
+    flake8-quotes \
+    pytest-repeat \
+    pytest-rerunfailures \
+    pytest \
+    setuptools
 
 .. _Rolling_QNX-dev-get-ros2-code:
 
@@ -298,7 +310,7 @@ This will override the installation path of packages when you run "make install"
 
     . ~/qnx710/qnxsdp-env-ros2.sh
 
-Optional: Add the sourcing command to the end of ~/bashrc if you would like the environment to be set everytime for you.
+Optional: Add the sourcing command to the end of ~/.bashrc if you would like the environment to be set every time for you.
 
 6- Import the required QNX build files for each dependency by importing QNX dependencies repositories.
 
@@ -338,14 +350,7 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
     ./colcon-ignore.sh
 
 
-9- Apply a temporary patch to google_benchmark_vendor package which will soon be fixed.
-
-.. code-block:: bash
-
-    ./apply-patch-before-build.sh
-
-
-10- Build ROS 2.
+9- Build ROS 2.
 
 .. code-block:: bash
 
@@ -365,7 +370,7 @@ Setup your target
     rsync -havz ~/qnx710/target/qnx7/x86_64/usr/lib/libffi.* root@target_ip:/usr/lib/
 
 
-3- Install pip
+3- Install pip on your target
 
 .. code-block:: bash
 
@@ -398,7 +403,7 @@ Setup your target
     ifconfig
     
 
-6- Check the amount of space availabe on your target and make sure you have enough space to copy the files over.
+6- Check the amount of space available on your target and make sure you have enough space to copy the files over.
 
 .. code-block:: bash
 
@@ -411,14 +416,39 @@ Note: you will have to replace "target_ip_address" with your target ip address.
 
 .. code-block:: bash
 
-    rsync -havz ~/ros2_rolling/qnx_stage/x86_64/usr/* root@target_ip_address:/usr/
+On host:
+
+.. code-block:: bash
+
+    cd ~/ros2_rolling/qnx_stage/x86_64/usr/
+    tar -czvf qnxdeps.tar.gz *
+    scp qnxdeps.tar.gz root@target_ip_address:/usr/
+
+On target:
+
+.. code-block:: bash
+
+    cd /usr
+    tar -xzvf qnxdeps.tar.gz
 
 8- Copy ROS 2 to your target.
 
 Note: you will have to replace "your_target_architecture" with your target architecture.
 
-    rsync -havz install/your_target_architecture/* root@target_ip_address:/opt/ros/rolling/
+On host:
 
+.. code-block:: bash
+
+    cd ~/ros2_rolling/install/x86_64/
+    tar -czvf ros2_rolling.tar.gz *
+    scp ros2_rolling.tar.gz root@target_ip_address:/opt/ros/rolling/
+
+On target:
+
+.. code-block:: bash
+
+    cd /opt/ros/rolling
+    tar -xzvf ros2_rolling.tar.gz
 
 All the necessary files to run ROS 2 are now on your target.
 
