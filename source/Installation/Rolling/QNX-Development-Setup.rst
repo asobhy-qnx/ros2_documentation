@@ -113,11 +113,11 @@ Install Python 3.8.0
     wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz
     tar -xf Python-3.8.0.tgz
     cd Python-3.8.0
-    sudo ./configure --enable-optimizations
+    sudo ./configure --enable-optimizations --prefix=/usr
     sudo make -j$(nproc)
-    sudo make altinstall
-    sudo ln -s /usr/local/bin/python3.8 /usr/local/bin/python
-    sudo ln -s /usr/local/bin/python3.8 /usr/local/bin/python3
+    sudo make install
+    sudo ln -sf /usr/bin/python3.8 /usr/bin/python
+    sudo ln -sf /usr/bin/python3.8 /usr/bin/python3
 
 Open a new terminal and verify Python version is correct.
     
@@ -220,6 +220,7 @@ Dashing, Foxy and Rolling dependencies:
     lxml --depends-on--> libxslt
     tinyxml2
     uncrustify
+    yaml-cpp
 
 Foxy and Rolling extra dependencies:
 
@@ -228,7 +229,7 @@ Foxy and Rolling extra dependencies:
     netifaces
     libbullet-dev
     memory
-
+    pybind11
 
 Dependencies build instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -283,6 +284,7 @@ This will override the installation path of packages when you run "make install"
 
 Optional: Add the sourcing command to the end of ~/.bashrc if you would like the environment to be set every time for you.
 
+
 6- Import the required QNX build files for each dependency by importing QNX dependencies repositories.
 
 .. code-block:: bash
@@ -292,7 +294,21 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
     vcs import src < qnx_deps.repos
 
 
-7- Build ROS 2 QNX dependencies. Please note this step will take quite sometime as it will clone, patch and build all the required dependencies
+7- Export the following variables according to the architecture and C++ library to use:
+
+If no CPU is set all architectures are going to be built.
+
+options for CPU: aarch64, x86_64
+
+options for STDLIB: libc++, stdlibc++
+
+.. code-block:: bash
+    
+    export CPU=aarch64
+    export STDLIB=libstdc++
+
+
+8- Build ROS 2 QNX dependencies. Please note this step will take quite sometime as it will clone, patch and build all the required dependencies
 
 .. code-block:: bash
 
@@ -301,7 +317,7 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
 Double check the installation of the dependencies in your staging directory ~/ros2_rolling/qnx_stage/usr/include and ~/ros2_rolling/qnx_stage/$CPUVARDIR/usr/lib
 
 
-8- After the dependencies are built and installed successfully you can start building ROS 2 but some packages will need to be ignored first. Which are as following.
+9- After the dependencies are built and installed successfully you can start building ROS 2 but some packages will need to be ignored first. Which are as following.
 
 .. code-block:: bash
 
@@ -311,6 +327,7 @@ Double check the installation of the dependencies in your staging directory ~/ro
     Mimick
     Rttest
     Pendulum Control Demo
+    Pybind11
 
 
 Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the packages above to prevent them from being built.
@@ -321,7 +338,7 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
     ./colcon-ignore.sh
 
 
-9- Build ROS 2.
+10- Build ROS 2.
 
 .. code-block:: bash
 
@@ -338,7 +355,7 @@ Setup your target
 
 .. code-block:: bash
     
-    rsync -havz ~/qnx710/target/qnx7/x86_64/usr/lib/libffi.* root@target_ip:/usr/lib/
+    rsync -havz ~/qnx710/target/qnx7/x86_64/usr/lib/libffi.* root@<target_ip>:/usr/lib/
 
 
 3- Install pip on your target
