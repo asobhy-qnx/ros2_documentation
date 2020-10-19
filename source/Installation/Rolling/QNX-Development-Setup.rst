@@ -300,7 +300,7 @@ If no CPU is set all architectures are going to be built.
 
 options for CPU: aarch64, x86_64
 
-options for STDLIB: libc++, stdlibc++
+options for STDLIB: libc++, libstdc++
 
 .. code-block:: bash
     
