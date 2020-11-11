@@ -242,7 +242,7 @@ Setup your host
 .. code-block:: bash
 
     cd ~/ros2_rolling
-    git clone https://github.com/asobhy-qnx/ros2.git /tmp/ros2
+    git clone https://gitlab.com/qnx/ros2/ros2_qnx.git /tmp/ros2
     rsync -haz /tmp/ros2/* .
     rm -rf /tmp/ros2
 
@@ -261,7 +261,7 @@ This will create the directory tree ~/ros2_rolling/qnx_stage
 .. code-block:: bash
 
     cp ~/qnx710/qnxsdp-env.sh ~/qnx710/qnxsdp-env-ros2.sh; \
-    echo -e "\nQNX_STAGE=$HOME/ros2_rolling/qnx_stage\nQCONF_OVERRIDE=$HOME/qnx710/qconf-override.mk\n\n \
+    echo -e "\nQNX_STAGE=$HOME/ros2_rolling/qnx_stage/target/qnx7 \nQCONF_OVERRIDE=$HOME/qnx710/qconf-override.mk\n\n \
     export QNX_STAGE QCONF_OVERRIDE\n\n \
     echo QNX_STAGE=\$QNX_STAGE\n \
     echo QCONF_OVERRIDE=\$QCONF_OVERRIDE" >> ~/qnx710/qnxsdp-env-ros2.sh
