@@ -97,7 +97,7 @@ Install development tools and ROS tools
    python3 -m pip install -U importlib-metadata importlib-resources
 
 
-Install tools needed for building QNX dependencies
+Install extra tools needed for building QNX dependencies
 
 .. code-block:: bash
 
@@ -110,14 +110,8 @@ Install tools needed for building QNX dependencies
      zlib1g-dev \
      rsync \
      rename \
-
-Cython is needed for building numpy which is one of the dependencies needed to be built from source.
-
-.. code-block:: bash
-
-   pip3 install Cython
-
-
+     
+     
 .. _Rolling_QNX-dev-get-ros2-code:
 
 Get ROS 2 code
@@ -154,38 +148,6 @@ Through out this document I will assume QNX SDP7.1 is installed under ~/qnx710 a
 
 You will need to source the script above before building for QNX, but first you need to do the following steps.
 
-
-List of required dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The list below represent the dependencies required to be built from source, which is then followed by the build instructions.
-
-Dashing, Foxy and Rolling dependencies:
-
-.. code-block:: bash
-
-    apr
-    apr-util
-    log4cxx
-    asio
-    eigen3
-    libpng16
-    opencv
-    numpy --depends-on--> cython
-    lxml --depends-on--> libxslt
-    tinyxml2
-    uncrustify
-    yaml-cpp
-
-Foxy and Rolling extra dependencies:
-
-.. code-block:: bash
-
-    netifaces
-    libbullet-dev
-    memory
-    pybind11
-
 Dependencies build instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -202,36 +164,7 @@ Setup your host
     rm -rf /tmp/ros2
 
 
-2- Create a staging directory which will contain the installation of your cross compiled dependencies.
-
-.. code-block:: bash
-
-    ./create-stage.sh
-
-This will create the directory tree ~/ros2_rolling/qnx_stage
-
-    
-3- Create a second copy of the qnxsdp-env.sh script located in ~/qnx710, name it qnxsdp-env-ros2.sh and add the following to the end.
-
-.. code-block:: bash
-
-    cp ~/qnx710/qnxsdp-env.sh ~/qnx710/qnxsdp-env-ros2.sh; \
-    echo -e "\nQNX_STAGE=$HOME/ros2_rolling/qnx_stage/target/qnx7 \nQCONF_OVERRIDE=$HOME/qnx710/qconf-override.mk\n\n \
-    export QNX_STAGE QCONF_OVERRIDE\n\n \
-    echo QNX_STAGE=\$QNX_STAGE\n \
-    echo QCONF_OVERRIDE=\$QCONF_OVERRIDE" >> ~/qnx710/qnxsdp-env-ros2.sh
-
-
-4- Under ~/qnx710 create a file named qconf-override.mk like so.
-
-.. code-block:: bash
-
-    echo -e "INSTALL_ROOT_nto := \$(QNX_STAGE)\nUSE_INSTALL_ROOT = 1" > ~/qnx710/qconf-override.mk
-
-This will override the installation path of packages when you run "make install" to install files into your qnx_stage directory instead of into the sdp.
-
-
-5- Source qnxsdp-env.sh script.
+2- Source qnxsdp-env.sh script.
 
 .. code-block:: bash
 
@@ -240,30 +173,27 @@ This will override the installation path of packages when you run "make install"
 Optional: Add the sourcing command to the end of ~/.bashrc if you would like the environment to be set every time for you.
 
 
-6- Import the required QNX build files for each dependency by importing QNX dependencies repositories.
+3- Import the required QNX build files for each dependency by importing QNX dependencies repositories.
 
 .. code-block:: bash
 
-    cd ~/ros2_rolling/qnx_deps
-    mkdir src
-    vcs import src < qnx_deps.repos
+    cd ~/ros2_rolling
+    mkdir -p src/qnx_deps
+    vcs import src/qnx_deps < qnx_deps.repos
 
 
-7- Export the following variables according to the architecture and C++ library to use:
+4- Export the following variables according to the architecture and C++ library to use:
 
 If no CPU is set all architectures are going to be built.
 
 options for CPU: aarch64, x86_64
 
-options for STDLIB: libc++, libstdc++
-
 .. code-block:: bash
     
     export CPU=aarch64
-    export STDLIB=libstdc++
 
 
-8- Build ROS 2 QNX dependencies. Please note this step will take quite sometime as it will clone, patch and build all the required dependencies
+5- Build ROS 2 QNX dependencies. Please note this step will take quite sometime as it will clone, patch and build all the required dependencies
 
 .. code-block:: bash
 
@@ -272,7 +202,7 @@ options for STDLIB: libc++, libstdc++
 Double check the installation of the dependencies in your staging directory ~/ros2_rolling/qnx_stage/usr/include and ~/ros2_rolling/qnx_stage/$CPUVARDIR/usr/lib
 
 
-9- After the dependencies are built and installed successfully you can start building ROS 2 but some packages will need to be ignored first. Which are as following.
+6- After the dependencies are built and installed successfully you can start building ROS 2 but some packages will need to be ignored first. Which are as following.
 
 .. code-block:: bash
 
@@ -293,7 +223,7 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
     ./colcon-ignore.sh
 
 
-10- Build ROS 2.
+7- Build ROS 2.
 
 .. code-block:: bash
 
