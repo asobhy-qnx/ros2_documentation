@@ -67,71 +67,15 @@ Install tools needed for building dependencies
      wget \
      git \
      rsync \
-     rename
-
-Install cmake 3.18.0
-
-.. code-block:: bash
-    
-    sudo bash
-    cd /opt
-    wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
-    sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt
-    ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
-    exit
-    
-Check version.
-    
-.. code-block:: bash
-
-    cmake --version
-
-Install Python 3.8.0 dependencies
-
-.. code-block:: bash
-
-    sudo apt install -y \
-     libsqlite3-dev \
-     sqlite3 \
-     bzip2 \
-     libbz2-dev \
-     zlib1g-dev \
-     openssl \
-     libgdbm-dev \
-     libgdbm-compat-dev \
-     liblzma-dev \
-     libreadline-dev \
-     libncursesw5-dev \
-     libffi-dev \
-     uuid-dev
-
-Install Python 3.8.0
-
-.. code-block:: bash
-
-    cd /tmp
-    wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz
-    tar -xf Python-3.8.0.tgz
-    cd Python-3.8.0
-    sudo ./configure --enable-optimizations --prefix=/usr
-    sudo make -j$(nproc)
-    sudo make install
-    sudo ln -sf /usr/bin/python3.8 /usr/bin/python
-    sudo ln -sf /usr/bin/python3.8 /usr/bin/python3
-
-Open a new terminal and verify Python version is correct.
-    
-.. code-block:: bash
-
-    python --version
-    python3 --version
-
+     rename \
+     cmake
+     
 
 Install standard ROS 2 development tools. Cython is needed for building numpy which is one of the dependencies needed to be built from source.
 
 .. code-block:: bash
 
-   sudo pip3.8 install \
+   pip3 install \
     colcon-common-extensions \
     flake8 \
     pytest-cov \
@@ -148,7 +92,7 @@ Install some packages needed for testing
 
 .. code-block:: bash
 
-   sudo pip3.8 install \
+   pip3 install \
     argcomplete \
     flake8-blind-except \
     flake8-builtins \
