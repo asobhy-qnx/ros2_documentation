@@ -1,6 +1,6 @@
 .. _linux-latest:
 
-Building ROS 2 for QNX 
+Building ROS 2 for QNX
 =======================
 
 .. contents:: Table of Contents
@@ -12,10 +12,9 @@ Overview of the build process
 -----------------------------
 
 Starting with a QNX SDP7.1 installation along with the required cross compiled dependencies, the build process will cross compile ROS 2's source code against SDP7.1 and the cross compiled dependencies.
-Binaries will be generated for three architectures:
+Binaries will be generated for the two architectures below:
 
 aarch64le
-armv7-le
 x86_64
 
 The generated files can then be transferred to the required target and used. The following document will go over the steps needed to cross compile the dependencies and ROS 2.
@@ -26,7 +25,12 @@ System requirements
 
 HOST:
 
-- A PC running with Ubuntu 18.04 or 20.04 and QNX SDP7.1
+- Ubuntu 20.04
+- QNX SDP7.1
+
+For instructions to install SDP7.1 please follow the link:
+
+http://www.qnx.com/developers/docs/7.1/index.html#com.qnx.doc.qnxsdp.quickstart/topic/about.html
 
 TARGET:
 
@@ -49,63 +53,70 @@ However, it should be fine if you're using a different UTF-8 supported locale.
    sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
    export LANG=en_US.UTF-8
 
+
+Add the ROS 2 apt repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. include:: ../_Apt-Repositories.rst
+
+
 Install development tools and ROS tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Install tools needed for building dependencies
+.. code-block:: bash
+
+   sudo apt update && sudo apt install -y \
+     build-essential \
+     cmake \
+     git \
+     libbullet-dev \
+     python3-colcon-common-extensions \
+     python3-flake8 \
+     python3-pip \
+     python3-pytest-cov \
+     python3-rosdep \
+     python3-setuptools \
+     python3-vcstool \
+     wget
+   # install some pip packages needed for testing
+   python3 -m pip install -U \
+     argcomplete \
+     flake8-blind-except \
+     flake8-builtins \
+     flake8-class-newline \
+     flake8-comprehensions \
+     flake8-deprecated \
+     flake8-docstrings \
+     flake8-import-order \
+     flake8-quotes \
+     pytest-repeat \
+     pytest-rerunfailures \
+     pytest \
+     setuptools
+
+   python3 -m pip install -U importlib-metadata importlib-resources
+
+
+Install tools needed for building QNX dependencies
 
 .. code-block:: bash
 
     sudo apt install -y \
-     build-essential \
      bc \
      subversion \
      autoconf \
      libtool-bin \
      libssl-dev \
      zlib1g-dev \
-     wget \
-     git \
      rsync \
      rename \
-     cmake
-     
 
-Install standard ROS 2 development tools. Cython is needed for building numpy which is one of the dependencies needed to be built from source.
+Cython is needed for building numpy which is one of the dependencies needed to be built from source.
 
 .. code-block:: bash
 
-   pip3 install \
-    colcon-common-extensions \
-    flake8 \
-    pytest-cov \
-    rosdep \
-    setuptools \
-    vcstool \
-    lark-parser \
-    numpy \
-    Cython \
-    importlib-metadata \
-    importlib-resources
-     
-Install some packages needed for testing
+   pip3 install Cython
 
-.. code-block:: bash
-
-   pip3 install \
-    argcomplete \
-    flake8-blind-except \
-    flake8-builtins \
-    flake8-class-newline \
-    flake8-comprehensions \
-    flake8-deprecated \
-    flake8-docstrings \
-    flake8-import-order \
-    flake8-quotes \
-    pytest-repeat \
-    pytest-rerunfailures \
-    pytest \
-    setuptools
 
 .. _Rolling_QNX-dev-get-ros2-code:
 
