@@ -169,7 +169,6 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
 
 .. code-block:: bash
 
-    cd ~/ros2_rolling
     mkdir -p src/qnx_deps
     vcs import src/qnx_deps < qnx_deps.repos
 
@@ -202,7 +201,6 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
 
 .. code-block:: bash
 
-    cd ~/ros2_rolling
     ./colcon-ignore.sh
 
 
