@@ -94,7 +94,7 @@ Install development tools and ROS tools
      pytest \
      setuptools
 
-   python3 -m pip install -U importlib-metadata importlib-resources
+   python3 -m pip install -U importlib-metadata importlib-resources Cython numpy
 
 
 Install extra tools needed for building QNX dependencies
@@ -109,7 +109,7 @@ Install extra tools needed for building QNX dependencies
      libssl-dev \
      zlib1g-dev \
      rsync \
-     rename \
+     rename
      
      
 .. _Rolling_QNX-dev-get-ros2-code:
@@ -139,14 +139,6 @@ Environment variable which provides the path to your ~/qnx_installation_path/hos
 **QNX_TARGET:**
 Environment variable which provides the path to your ~/qnx_installation_path/target/qnx7, e.g: ~/qnx710/target/qnx7, and this is where the system root files for the three supported architectures exist
 
-**QNX_STAGE:**
-Environment variable which can be set by the user to provid the path to your cross compiled dependencies.
-
-The environment variables above need to be set by a script before you start building for QNX. The script exists inside your SDP7.1 directory, e.g: qnx710/qnxsdp-env.sh.
-
-Through out this document I will assume QNX SDP7.1 is installed under ~/qnx710 and will be referring to it as such. Please check any of the steps that I include ~/qnx710 in and change it according to your actual path.
-
-You will need to source the script above before building for QNX, but first you need to do the following steps.
 
 Dependencies build instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -182,9 +174,9 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
     vcs import src/qnx_deps < qnx_deps.repos
 
 
-4- Export the following variables according to the architecture and C++ library to use:
+4- Export CPU variable according to your target architecture:
 
-If no CPU is set all architectures are going to be built.
+Please note: If no CPU is set all architectures are going to be built.
 
 options for CPU: aarch64, x86_64
 
@@ -193,16 +185,7 @@ options for CPU: aarch64, x86_64
     export CPU=aarch64
 
 
-5- Build ROS 2 QNX dependencies. Please note this step will take quite sometime as it will clone, patch and build all the required dependencies
-
-.. code-block:: bash
-
-    ./build-deps.sh
-
-Double check the installation of the dependencies in your staging directory ~/ros2_rolling/qnx_stage/usr/include and ~/ros2_rolling/qnx_stage/$CPUVARDIR/usr/lib
-
-
-6- After the dependencies are built and installed successfully you can start building ROS 2 but some packages will need to be ignored first. Which are as following.
+5- Before building ROS 2, some packages will need to be ignored first. Which are as following.
 
 .. code-block:: bash
 
@@ -223,7 +206,7 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
     ./colcon-ignore.sh
 
 
-7- Build ROS 2.
+6- Build ROS 2.
 
 .. code-block:: bash
 
