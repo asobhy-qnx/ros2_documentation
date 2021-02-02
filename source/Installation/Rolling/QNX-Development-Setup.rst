@@ -160,7 +160,7 @@ Setup your host
 
 .. code-block:: bash
 
-    . ~/qnx710/qnxsdp-env-ros2.sh
+    . ~/qnx710/qnxsdp-env.sh
 
 Optional: Add the sourcing command to the end of ~/.bashrc if you would like the environment to be set every time for you.
 
