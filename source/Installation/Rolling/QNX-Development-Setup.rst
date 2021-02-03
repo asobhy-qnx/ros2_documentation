@@ -93,11 +93,18 @@ Install development tools and ROS tools
      pytest-rerunfailures \
      pytest \
      setuptools
-
-   python3 -m pip install -U importlib-metadata importlib-resources Cython numpy
-
+     
 
 Install extra tools needed for building QNX dependencies
+
+.. code-block:: bash
+
+    python3 -m pip install -U \
+     importlib-metadata \
+     importlib-resources \
+     Cython \
+     numpy \
+     lark-parser
 
 .. code-block:: bash
 
