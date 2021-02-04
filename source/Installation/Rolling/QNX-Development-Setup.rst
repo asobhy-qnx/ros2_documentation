@@ -179,17 +179,11 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
     mkdir -p src/qnx_deps
     vcs import src/qnx_deps < qnx_deps.repos
 
-
-4- Export CPU variable according to your target architecture:
-
-Please note: If no CPU is set all architectures are going to be built.
-
-options for CPU: aarch64, x86_64
+4- Run a script to automatically add build dependencies on the packages required to be built for QNX.
 
 .. code-block:: bash
-    
-    export CPU=aarch64
 
+    ./check_deps.py --path=src
 
 5- Before building ROS 2, some packages will need to be ignored first. Which are as following.
 
@@ -211,7 +205,18 @@ Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the package
     ./colcon-ignore.sh
 
 
-6- Build ROS 2.
+6- Export CPU variable according to your target architecture:
+
+Please note: If no CPU is set all architectures are going to be built.
+
+options for CPU: aarch64, x86_64
+
+.. code-block:: bash
+    
+    export CPU=aarch64
+
+
+7- Build ROS 2.
 
 .. code-block:: bash
 
@@ -228,8 +233,8 @@ Setup your target
 
 .. code-block:: bash
     
-    rsync -havz ~/qnx710/target/qnx7/x86_64/usr/lib/libffi.* root@<target_ip>:/usr/lib/
-
+    scp ~/qnx710/target/qnx7/x86_64/usr/lib/libffi.so.6 root@<target_ip>:/usr/lib/
+    ln -s /usr/lib/libffi.so.6 /usr/lib/libffi.so
 
 3- Install pip on your target
 
@@ -271,28 +276,7 @@ Setup your target
     df -h
 
 
-7- Copy the dependencies to your target.
-
-Note: you will have to replace "target_ip_address" with your target ip address.
-
-.. code-block:: bash
-
-On host:
-
-.. code-block:: bash
-
-    cd ~/ros2_rolling/qnx_stage/x86_64/usr/
-    tar -czvf qnxdeps.tar.gz *
-    scp qnxdeps.tar.gz root@target_ip_address:/usr/
-
-On target:
-
-.. code-block:: bash
-
-    cd /usr
-    tar -xzvf qnxdeps.tar.gz
-
-8- Copy ROS 2 to your target.
+7- Copy ROS 2 to your target.
 
 Note: you will have to replace "your_target_architecture" with your target architecture.
 
@@ -300,7 +284,7 @@ On host:
 
 .. code-block:: bash
 
-    cd ~/ros2_rolling/install/x86_64/
+    cd ~/ros2_rolling/install/<your_target_arch>/
     tar -czvf ros2_rolling.tar.gz *
     scp ros2_rolling.tar.gz root@target_ip_address:/opt/ros/rolling/
 
@@ -355,7 +339,7 @@ Source your development environment which includes QNX environment and ROS2.
 .. code-block:: bash
 
     . ~/qnx710/qnxsdp-env-ros2.sh
-    . ~/ros2_rolling/install/your_target_arch/local_setup.bash
+    . ~/ros2_rolling/install/<your_target_arch>/local_setup.bash
 
 
 After you write your code and are ready to build you can run colcon by running the build-ros2.sh script.
