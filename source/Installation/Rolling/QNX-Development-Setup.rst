@@ -134,24 +134,8 @@ Create a workspace and clone all repos:
    vcs import src < ros2.repos
 
 
-Build and Install dependencies
-------------------------------
-
-Important QNX keywords and a brief intro
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**QNX_HOST:**
-Environment variable which provides the path to your ~/qnx_installation_path/host/operating_system_name/architecture/, e.g: ~/qnx710/host/linux/x86_64, and this is where your toolchain is.
-
-**QNX_TARGET:**
-Environment variable which provides the path to your ~/qnx_installation_path/target/qnx7, e.g: ~/qnx710/target/qnx7, and this is where the system root files for the three supported architectures exist
-
-
-Dependencies build instructions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Setup your host
-^^^^^^^^^^^^^^^
+Building steps
+--------------
 
 1- From withing the directory ~/ros2_rolling, clone additional files necessary for building ROS 2 and the dependencies then merge them with your ROS 2 directory.
 
@@ -179,7 +163,8 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
     mkdir -p src/qnx_deps
     vcs import src/qnx_deps < qnx_deps.repos
 
-4- Run a script to automatically add build dependencies on the packages required to be built for QNX.
+
+4- Run a script to automatically embed <build_depend> in the packages that depends on qnx_deps.
 
 .. code-block:: bash
 
