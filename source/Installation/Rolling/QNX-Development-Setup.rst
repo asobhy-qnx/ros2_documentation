@@ -65,9 +65,13 @@ Install development tools and ROS tools
 
 .. code-block:: bash
 
+   cd /opt && \
+   sudo wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
+   sudo sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt && \
+   sudo ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
+
    sudo apt update && sudo apt install -y \
      build-essential \
-     cmake \
      git \
      libbullet-dev \
      python3-colcon-common-extensions \
