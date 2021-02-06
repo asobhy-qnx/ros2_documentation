@@ -7,7 +7,6 @@ Building ROS 2 for QNX
    :depth: 2
    :local:
 
-
 Overview of the build process
 -----------------------------
 
@@ -18,7 +17,6 @@ aarch64le
 x86_64
 
 The generated files can then be transferred to the required target and used. The following document will go over the steps needed to cross compile the dependencies and ROS 2.
-
 
 System requirements
 -------------------
@@ -36,7 +34,6 @@ TARGET:
 
 - A QNX supported architecture running QNX SDP7.1
 
-
 System setup
 ------------
 
@@ -53,22 +50,15 @@ However, it should be fine if you're using a different UTF-8 supported locale.
    sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
    export LANG=en_US.UTF-8
 
-
 Add the ROS 2 apt repository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: ../_Apt-Repositories.rst
 
-
 Install development tools and ROS tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
-
-   cd /opt && \
-   sudo wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
-   sudo sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt && \
-   sudo ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
 
    sudo apt update && sudo apt install -y \
      build-essential \
@@ -81,7 +71,16 @@ Install development tools and ROS tools
      python3-rosdep \
      python3-setuptools \
      python3-vcstool \
-     wget
+     wget \
+     bc \
+     subversion \
+     autoconf \
+     libtool-bin \
+     libssl-dev \
+     zlib1g-dev \
+     rsync \
+     rename
+     
    # install some pip packages needed for testing
    python3 -m pip install -U \
      argcomplete \
@@ -96,14 +95,7 @@ Install development tools and ROS tools
      pytest-repeat \
      pytest-rerunfailures \
      pytest \
-     setuptools
-     
-
-Install extra tools needed for building QNX dependencies
-
-.. code-block:: bash
-
-    python3 -m pip install -U \
+     setuptools \
      importlib-metadata \
      importlib-resources \
      Cython \
@@ -112,16 +104,9 @@ Install extra tools needed for building QNX dependencies
 
 .. code-block:: bash
 
-    sudo apt install -y \
-     bc \
-     subversion \
-     autoconf \
-     libtool-bin \
-     libssl-dev \
-     zlib1g-dev \
-     rsync \
-     rename
-     
+   cd /opt && sudo wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
+   sudo sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt && \
+   sudo ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
      
 .. _Rolling_QNX-dev-get-ros2-code:
 
@@ -137,7 +122,6 @@ Create a workspace and clone all repos:
    wget https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos
    vcs import src < ros2.repos
 
-
 Building steps
 --------------
 
@@ -150,7 +134,6 @@ Building steps
     rsync -haz /tmp/ros2/* .
     rm -rf /tmp/ros2
 
-
 2- Source qnxsdp-env.sh script.
 
 .. code-block:: bash
@@ -159,7 +142,6 @@ Building steps
 
 Optional: Add the sourcing command to the end of ~/.bashrc if you would like the environment to be set every time for you.
 
-
 3- Import the required QNX build files for each dependency by importing QNX dependencies repositories.
 
 .. code-block:: bash
@@ -167,32 +149,17 @@ Optional: Add the sourcing command to the end of ~/.bashrc if you would like the
     mkdir -p src/qnx_deps
     vcs import src/qnx_deps < qnx_deps.repos
 
-
 4- Run a script to automatically embed <build_depend> in the packages that depends on qnx_deps.
 
 .. code-block:: bash
 
-    ./check_deps.py --path=src
+    ./check_deps.py --path=src -v
 
 5- Before building ROS 2, some packages will need to be ignored first. Which are as following.
 
 .. code-block:: bash
 
-    Visualization
-    Uncrustify
-    CycloneDDS
-    Mimick
-    Rttest
-    Pendulum Control Demo
-    Pybind11
-
-
-Run the script colcon-ignore.sh and it will add COLCON_IGNORE to all the packages above to prevent them from being built.
-
-.. code-block:: bash
-
     ./colcon-ignore.sh
-
 
 6- Export CPU variable according to your target architecture:
 
@@ -204,19 +171,16 @@ options for CPU: aarch64, x86_64
     
     export CPU=aarch64
 
-
 7- Build ROS 2.
 
 .. code-block:: bash
 
     ./build-ros2.sh
 
-
 Setup your target
 ^^^^^^^^^^^^^^^^^
 
 1- ssh to your target or run the following commands on your target directly.
-
 
 2- make sure libffi is included with your image otherwise copy it over from your sdp
 
@@ -232,7 +196,6 @@ Setup your target
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
     python get-pip.py
 
-
 4- Install python dependencies on your target.
 
 .. code-block:: bash
@@ -242,28 +205,24 @@ Setup your target
     importlib-metadata \
     importlib-resources \
     lark-parser
-    
 
 5- create a directory for ROS 2's installation.
 
 .. code-block:: bash
     
     mkdir -p /opt/ros/rolling
-    
 
 6- Get the ip address of your target
 
 .. code-block:: bash
     
     ifconfig
-    
 
 6- Check the amount of space available on your target and make sure you have enough space to copy the files over.
 
 .. code-block:: bash
 
     df -h
-
 
 7- Copy ROS 2 to your target.
 
@@ -286,7 +245,6 @@ On target:
 
 All the necessary files to run ROS 2 are now on your target.
 
-
 Test the installation
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -308,14 +266,12 @@ Test the installation
     
 You should see the demos running on both terminals if the installation went successfull.
 
-
 Developing your own code using ROS 2
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now that we have ROS 2 binaries cross compiled along with the dependencies you can start building your own software against them.
 
 Please use the toolchain file along with the build-ros2.sh script used to build ROS 2 with any of your future packages.
-
 
 .. code-block:: bash
 
@@ -329,7 +285,6 @@ Source your development environment which includes QNX environment and ROS2.
 
     . ~/qnx710/qnxsdp-env-ros2.sh
     . ~/ros2_rolling/install/<your_target_arch>/local_setup.bash
-
 
 After you write your code and are ready to build you can run colcon by running the build-ros2.sh script.
 
