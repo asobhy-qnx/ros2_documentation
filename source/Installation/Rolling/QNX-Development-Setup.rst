@@ -105,7 +105,7 @@ Install development tools and ROS tools
 .. code-block:: bash
 
    cd /opt && sudo wget https://cmake.org/files/v3.18/cmake-3.18.0-Linux-x86_64.sh
-   sudo sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt && \
+   yes | sudo sh cmake-3.18.0-Linux-x86_64.sh --prefix=/opt --skip-license
    sudo ln -s /opt/cmake-3.18.0-Linux-x86_64/bin/cmake /usr/local/bin/cmake
      
 .. _Rolling_QNX-dev-get-ros2-code:
